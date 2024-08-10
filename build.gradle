@@ -1,0 +1,37 @@
+plugins {
+    id "org.jetbrains.kotlin.jvm" version '2.0.0'
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+dependencies {
+    // openglfx
+    api("com.huskerdev:openglfx-lwjgl:4.1.0") {
+        exclude module: "openglfx-native-core-macos"
+        exclude module: "openglfx-native-core-linux"
+    }
+
+    // JavaFX
+    def javafxVersion = '22.0.1'
+    for (os in ["linux", "mac", "win"]) {
+        for (arch in [""]) {
+            api "org.openjfx:javafx-base:$javafxVersion:$os$arch"
+            api "org.openjfx:javafx-controls:$javafxVersion:$os$arch"
+            api "org.openjfx:javafx-graphics:$javafxVersion:$os$arch"
+        }
+    }
+
+    // LWJGL
+    api platform("org.lwjgl:lwjgl-bom:3.3.4")
+    api "org.lwjgl:lwjgl"
+    api "org.lwjgl:lwjgl-opengl"
+    for (os in ["linux", "macos", "windows"]) {
+        for (arch in [""]) {
+            api "org.lwjgl:lwjgl::natives-$os$arch"
+            api "org.lwjgl:lwjgl-opengl::natives-$os$arch"
+        }
+    }
+}
