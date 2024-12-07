@@ -7,12 +7,20 @@ repositories {
     mavenCentral()
 }
 
+
+jar {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    manifest {
+        attributes "Main-Class": "ExampleKt"
+    }
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
 dependencies {
     // openglfx
-    api("com.huskerdev:openglfx-lwjgl:4.1.0") {
-        exclude module: "openglfx-native-core-macos"
-        exclude module: "openglfx-native-core-linux"
-    }
+    api("com.huskerdev:openglfx-lwjgl:4.1.0")
 
     // JavaFX
     def javafxVersion = '22.0.1'
@@ -23,6 +31,9 @@ dependencies {
             api "org.openjfx:javafx-graphics:$javafxVersion:$os$arch"
         }
     }
+
+    // OPTIONAL: es2 pipeline for windows
+    api files("./javafx.graphics.win-es2.jar")
 
     // LWJGL
     api platform("org.lwjgl:lwjgl-bom:3.3.4")
